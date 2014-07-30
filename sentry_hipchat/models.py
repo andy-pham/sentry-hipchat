@@ -71,7 +71,7 @@ class HipchatMessage(NotifyPlugin):
                 endpoint=endpoint,
                 token=token,
                 room=room,
-                message='[ALERT]%(project_name)s %(message)s %(link)s' % {
+                message='%(project_name)s %(message)s %(link)s' % {
                     'project_name': (' <strong>%s</strong>' % project.name) if include_project_name else '',
                     'message': alert.message,
                     'link': alert.get_absolute_url(),
@@ -90,14 +90,12 @@ class HipchatMessage(NotifyPlugin):
         link = group.get_absolute_url()
         endpoint = self.get_option('endpoint', project) or DEFAULT_ENDPOINT
 
-
         if token and room:
             self.send_payload(
                 endpoint=endpoint,
                 token=token,
                 room=room,
-                message='[%(level)s]%(project_name)s %(message)s [<a href="%(link)s">view</a>]' % {
-                    'level': level,
+                message='%(project_name)s %(message)s [<a href="%(link)s">view</a>]' % {
                     'project_name': (' <strong>%s</strong>' % project.name) if include_project_name else '',
                     'message': event.error(),
                     'link': link,
@@ -105,7 +103,6 @@ class HipchatMessage(NotifyPlugin):
                 notify=notify,
                 color=COLORS.get(level, 'purple'),
             )
-
 
     def send_payload(self, endpoint, token, room, message, notify, color='red'):
         values = {
