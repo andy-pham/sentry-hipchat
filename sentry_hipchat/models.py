@@ -13,6 +13,7 @@ from sentry.plugins.bases.notify import NotifyPlugin
 
 import sentry_hipchat
 
+import cgi
 import urllib
 import urllib2
 import json
@@ -97,7 +98,7 @@ class HipchatMessage(NotifyPlugin):
                 room=room,
                 message='%(project_name)s <a href="%(link)s">%(title)s</a><br>%(message)s' % {
                     'project_name': (' <strong>%s</strong>' % project.name) if include_project_name else '',
-                    'title': group.title,
+                    'title': cgi.escape(group.title).encode('ascii', 'xmlcharrefreplace'),
                     'message': event.error(),
                     'link': link,
                 },
